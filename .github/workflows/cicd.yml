@@ -1,11 +1,10 @@
-name: 'build and deploy vue app'
+name: "build and deploy vue app"
 
 on:
   push:
-    branches: 
+    branches:
       - main
 
-      
 permissions:
   contents: write
 
@@ -22,7 +21,7 @@ jobs:
       - name: Build Docker Image
         run: docker build -t ghcr.io/${{ github.actor }}/${{ github.event.repository.name }}:latest .
 
-      - name: Verify Vue Build Output
+      - name: Verify Build Output
         run: |
           CONTAINER_ID=$(docker create ghcr.io/${{ github.actor }}/${{ github.event.repository.name }}:latest)
           docker cp $CONTAINER_ID:/usr/share/nginx/html ./dist
@@ -34,3 +33,5 @@ jobs:
         with:
           branch: gh-pages
           folder: dist
+          clean: true
+          token: ${{ secrets.GITHUB_TOKEN }}
